@@ -9,9 +9,9 @@ export function ContactSection() {
   const [sent, setSent] = useState(false)
   function handleSubmit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); setSent(true) }
   return (
-    <section id="contact" className="scroll-mt-20 bg-background py-24 md:py-32">
+    <section id="contact" className="scroll-mt-20 border-t border-border bg-background py-24 md:py-32">
       <div className="container-wide">
-        <SectionHeading index="// 06" ghost="Contact" title="Contact" />
+        <SectionHeading index="// 07" ghost="Contact" title="Contact" subtitle="Start a project" />
         <div className="mx-auto max-w-3xl">
           {sent ? (<Reveal className="flex min-h-64 flex-col items-center justify-center gap-3 border border-border p-10 text-center"><span className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-accent">Message received</span><p className="text-2xl font-light uppercase tracking-[0.1em]">Thanks — we&apos;ll be in touch.</p><p className="text-pretty leading-relaxed text-muted-foreground">{studio.artist} reads every message and replies within a couple of days.</p></Reveal>) : (
             <Reveal>

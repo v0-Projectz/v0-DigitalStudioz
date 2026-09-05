@@ -4,14 +4,21 @@ import Image from 'next/image'
 import { Maximize2 } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
 import { Reveal } from '@/components/reveal'
-import { useLightbox, type LightboxSlide } from '@/components/lightbox'
+import { useLightbox, type LightboxItem } from '@/components/lightbox'
 import { works } from '@/lib/site-data'
 
 export function WorksSection() {
   const { open } = useLightbox()
-  const gallery: LightboxSlide[] = works.map((w) => ({ src: w.image, alt: w.name, caption: w.name, meta: `// ${w.id} / ${w.category}` }))
+  const gallery: LightboxItem[] = works.map((w) => ({
+    title: w.name,
+    meta: `// ${w.id} / ${w.category}`,
+    description: w.description,
+    href: w.href,
+    hrefLabel: 'View project',
+    images: w.gallery ?? [{ src: w.image, alt: w.name }],
+  }))
   return (
-    <section id="works" className="scroll-mt-20 bg-background pb-24 md:pb-32">
+    <section id="works" className="scroll-mt-20 border-t border-border bg-background py-24 md:py-32">
       <div className="container-wide"><SectionHeading index="// 03" ghost="Works" title="Full Works" /></div>
       <div className="flex flex-col">
         {works.map((work, i) => { const reversed = i % 2 === 1; return (
@@ -25,7 +32,7 @@ export function WorksSection() {
             <Reveal delay={120} className={reversed ? 'md:order-1' : ''}>
               <div className={reversed ? 'md:text-right' : ''}>
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-accent">{`// ${work.id} / ${work.name}`}</span>
-                <h3 className="mt-3 text-2xl font-light uppercase tracking-[0.12em] text-foreground md:text-3xl">{work.name}</h3>
+                <h3 className="mt-3 text-3xl font-bold uppercase leading-none tracking-tighter text-foreground md:text-5xl">{work.name}</h3>
                 <p className="mt-2 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">{work.category}</p>
                 <p className={`mt-5 max-w-md text-pretty leading-relaxed text-muted-foreground ${reversed ? 'md:ml-auto' : ''}`}>{work.description}</p>
               </div>

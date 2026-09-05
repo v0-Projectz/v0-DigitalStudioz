@@ -116,6 +116,8 @@ export function HeroSlider() {
           <div className="mt-8 flex items-stretch gap-2 pointer-events-auto sm:gap-3">
             {heroSlides.map((slide, i) => {
               const isActive = i === active
+              const n = String(i + 1).padStart(2, '0')
+              const total = String(count).padStart(2, '0')
               return (
                 <button
                   key={slide.subtitle}
@@ -123,9 +125,31 @@ export function HeroSlider() {
                   onClick={() => change(i >= active ? 1 : -1, i)}
                   aria-label={`Show slide ${i + 1}`}
                   aria-current={isActive}
-                  className={`group relative h-11 flex-1 border transition-colors ${isActive ? 'border-band-foreground/50' : 'border-band-foreground/20 hover:border-band-foreground/40'}`}
+                  className={`group relative h-16 flex-1 overflow-hidden border text-left transition-colors ${isActive ? 'border-accent/60 bg-accent/[0.06]' : 'border-band-foreground/20 hover:border-band-foreground/40'}`}
                 >
-                  <span className={`absolute left-2 top-1.5 font-mono text-[0.55rem] uppercase tracking-[0.2em] transition-colors ${isActive ? 'text-band-foreground' : 'text-band-foreground/50 group-hover:text-band-foreground/80'}`}>{slide.kicker.replace('// ', '')}</span>
+                  {/* corner crop marks */}
+                  <span aria-hidden className={`absolute left-0 top-0 h-1.5 w-1.5 border-l border-t ${isActive ? 'border-accent' : 'border-band-foreground/40'}`} />
+                  <span aria-hidden className={`absolute right-0 top-0 h-1.5 w-1.5 border-r border-t ${isActive ? 'border-accent' : 'border-band-foreground/40'}`} />
+                  {/* header: index / total */}
+                  <span className="absolute left-2 top-1.5 flex items-center gap-1 font-mono text-[0.55rem] uppercase tracking-[0.2em]">
+                    <span className={isActive ? 'text-accent' : 'text-band-foreground/55 group-hover:text-band-foreground/80'}>{n}</span>
+                    <span className="text-band-foreground/25">/ {total}</span>
+                  </span>
+                  {/* status readout */}
+                  <span className="absolute right-2 top-1.5 flex items-center gap-1 font-mono text-[0.5rem] uppercase tracking-[0.2em]">
+                    <span className={`h-1 w-1 rounded-full ${isActive ? 'animate-pulse bg-accent' : 'bg-band-foreground/30'}`} />
+                    <span className={isActive ? 'text-accent' : 'text-band-foreground/40'}>{isActive ? 'Live' : 'Cue'}</span>
+                  </span>
+                  {/* label + equalizer */}
+                  <span className="absolute bottom-2.5 left-2 right-2 flex items-end justify-between gap-2">
+                    <span className={`hidden truncate font-mono text-[0.55rem] uppercase tracking-[0.22em] sm:block ${isActive ? 'text-band-foreground/80' : 'text-band-foreground/40'}`}>{slide.kicker.replace('// ', '')}</span>
+                    <span aria-hidden className="flex items-end gap-[2px]">
+                      {[5, 9, 6, 11, 7].map((h, b) => (
+                        <span key={b} className={`w-[2px] ${isActive ? 'bg-accent/80' : 'bg-band-foreground/25'}`} style={{ height: `${h}px` }} />
+                      ))}
+                    </span>
+                  </span>
+                  {/* progress */}
                   <span className="absolute bottom-0 left-0 h-[3px] w-full bg-band-foreground/15">
                     <span
                       key={isActive ? `fill-${active}-${seconds}-${autoplay}` : `idle-${i}`}

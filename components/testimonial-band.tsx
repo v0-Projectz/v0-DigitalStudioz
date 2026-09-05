@@ -9,12 +9,18 @@ export function TestimonialBand({ image }: { image: string }) {
   const [index, setIndex] = useState(0)
   const item = testimonials[index]
   const go = (dir: number) => setIndex((prev) => (prev + dir + testimonials.length) % testimonials.length)
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1) }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(1) }
+  }
 
   return (
     <section
       aria-roledescription="carousel"
       aria-label="Client testimonials"
-      className="parallax-fixed relative flex min-h-[70vh] items-center justify-center bg-band text-band-foreground"
+      tabIndex={0}
+      onKeyDown={onKeyDown}
+      className="parallax-fixed relative flex min-h-[70vh] items-center justify-center bg-band text-band-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
       style={{ backgroundImage: `url('${image}')` }}
     >
       <div className="absolute inset-0 bg-scrim/75" />

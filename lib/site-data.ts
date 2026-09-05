@@ -8,6 +8,7 @@ export const studio = {
   instagramHandle: '@digitalstudioz',
   youtube: 'https://youtube.com/@digitalstudioz',
   youtubeHandle: '@digitalstudioz',
+  availability: 'Available for projects — 2026',
 }
 
 export const heroSlides = [
@@ -143,12 +144,16 @@ export const disciplines: Discipline[] = [
   },
 ]
 
+export type WorkTag = 'Music' | 'Video' | 'Motion' | 'Brand' | 'Web'
+export const workTags: WorkTag[] = ['Music', 'Video', 'Motion', 'Brand', 'Web']
+
 export type Work = {
   id: string
   name: string
   category: string
   description: string
   image: string
+  tags: WorkTag[]
   href?: string
   gallery?: GalleryImage[]
 }
@@ -160,6 +165,7 @@ export const works: Work[] = [
     category: 'Brand & Web / Motion',
     description: 'Full identity, site, and animated launch package for a dev-tools startup — logo, type, and build in one sprint.',
     image: '/images/reel-brand.png',
+    tags: ['Brand', 'Web', 'Motion'],
     href: 'https://digitalstudioz.com/work/neon-runtime',
     gallery: [
       { src: '/images/reel-brand.png', alt: 'Neon Runtime brand and web design system' },
@@ -173,6 +179,7 @@ export const works: Work[] = [
     category: 'Video / Direction',
     description: 'Concept, shoot, and edit for a lead single. Cool-toned night visuals cut tight to the beat.',
     image: '/images/reel-video.png',
+    tags: ['Video', 'Music'],
     href: 'https://digitalstudioz.com/work/city-lights',
     gallery: [
       { src: '/images/reel-video.png', alt: 'City Lights edit suite with footage timelines' },
@@ -185,6 +192,7 @@ export const works: Work[] = [
     category: 'Mix & Master',
     description: 'Restored and re-mastered a back catalog for streaming — wide, punchy, and loud without clipping.',
     image: '/images/reel-mixing.png',
+    tags: ['Music'],
     href: 'https://digitalstudioz.com/work/analog-warmth',
     gallery: [
       { src: '/images/reel-mixing.png', alt: 'Analog Warmth mastering console' },
@@ -197,6 +205,7 @@ export const works: Work[] = [
     category: 'Session / Capture',
     description: 'Tracked a live band and vocals in a single room. Raw takes, minimal edits, maximum feel.',
     image: '/images/reel-liveset.png',
+    tags: ['Music', 'Video'],
     href: 'https://digitalstudioz.com/work/live-at-the-vault',
   },
   {
@@ -205,6 +214,7 @@ export const works: Work[] = [
     category: 'Motion & 3D',
     description: 'Real-time render pipeline and an animated intro system for an independent label launch.',
     image: '/images/reel-motion.png',
+    tags: ['Motion', 'Brand'],
     href: 'https://digitalstudioz.com/work/signal',
     gallery: [
       { src: '/images/reel-motion.png', alt: 'Signal animated intro system frames' },
@@ -217,6 +227,7 @@ export const works: Work[] = [
     category: 'Photography / Campaign',
     description: 'A cool-toned stills campaign shot in-studio — one strobe, one backdrop, a full look book from a single session.',
     image: '/images/reel-photo.png',
+    tags: ['Brand', 'Video'],
     href: 'https://digitalstudioz.com/work/frontlit',
   },
   {
@@ -225,6 +236,7 @@ export const works: Work[] = [
     category: 'Voice / Podcast',
     description: 'Branding, booth setup, and edit workflow for a weekly interview show — from cold open to published feed.',
     image: '/images/reel-voice.png',
+    tags: ['Music', 'Brand'],
     href: 'https://digitalstudioz.com/work/the-wire',
   },
   {
@@ -233,10 +245,89 @@ export const works: Work[] = [
     category: 'Live Events / Show',
     description: 'Show package for a touring act — stage visuals, walk-on stings, and a synced lighting-ready motion set.',
     image: '/images/reel-stage.png',
+    tags: ['Motion', 'Video'],
     href: 'https://digitalstudioz.com/work/mainstage',
     gallery: [
       { src: '/images/reel-stage.png', alt: 'Mainstage stage visuals under cyan concert lighting' },
       { src: '/images/reel-liveset.png', alt: 'Mainstage performer under a cyan spotlight' },
+    ],
+  },
+  {
+    id: '09',
+    name: 'Nightshift',
+    category: 'Sound Design / Trailer',
+    description: 'Original score and sound design for a game trailer — tension built in the low end, released on the cut.',
+    image: '/images/work-nightshift.png',
+    tags: ['Music', 'Motion'],
+    href: 'https://digitalstudioz.com/work/nightshift',
+    gallery: [
+      { src: '/images/work-nightshift.png', alt: 'Sound-design control room with a modular synth and cyan waveforms at night' },
+      { src: '/images/reel-production.png', alt: 'Audio interface and outboard gear glowing cyan' },
+    ],
+  },
+  {
+    id: '10',
+    name: 'Glasshouse',
+    category: 'Web / Product Design',
+    description: 'A component-driven design system and marketing site for a SaaS product, built to scale across teams.',
+    image: '/images/work-glasshouse.png',
+    tags: ['Web', 'Brand'],
+    href: 'https://digitalstudioz.com/work/glasshouse',
+    gallery: [
+      { src: '/images/work-glasshouse.png', alt: 'Web product design system across two monitors glowing cyan' },
+      { src: '/images/hero-studio.png', alt: 'Studio workstation with glowing screens of design tools' },
+    ],
+  },
+  {
+    id: '11',
+    name: 'Afterglow',
+    category: 'Motion / Title Sequence',
+    description: 'A broadcast title sequence built in a real-time render pipeline — glowing type systems that flex to any ratio.',
+    image: '/images/work-afterglow.png',
+    tags: ['Motion', 'Video'],
+    href: 'https://digitalstudioz.com/work/afterglow',
+    gallery: [
+      { src: '/images/work-afterglow.png', alt: 'Motion title sequence with glowing cyan light streaks and 3D type' },
+      { src: '/images/reel-motion.png', alt: 'Abstract wireframe geometry glowing electric cyan' },
+    ],
+  },
+  {
+    id: '12',
+    name: 'Broadcast',
+    category: 'Video / Live Stream',
+    description: 'A repeatable multi-camera live-stream package — switching, lower-thirds, and stings for a weekly show.',
+    image: '/images/work-broadcast.png',
+    tags: ['Video', 'Motion'],
+    href: 'https://digitalstudioz.com/work/broadcast',
+    gallery: [
+      { src: '/images/work-broadcast.png', alt: 'Live-stream broadcast studio with a switcher and cyan preview monitors' },
+      { src: '/images/reel-video.png', alt: 'Video editing suite with footage timelines glowing cyan' },
+    ],
+  },
+  {
+    id: '13',
+    name: 'Monogram',
+    category: 'Brand / Identity',
+    description: 'An identity refresh for a design consultancy — a flexible monogram system with print and digital rules.',
+    image: '/images/work-monogram.png',
+    tags: ['Brand'],
+    href: 'https://digitalstudioz.com/work/monogram',
+    gallery: [
+      { src: '/images/work-monogram.png', alt: 'Brand identity flatlay of logo studies under cyan side light' },
+      { src: '/images/hero-brand.png', alt: 'Logo grid and typography prints pinned under cyan light' },
+    ],
+  },
+  {
+    id: '14',
+    name: 'Resonance',
+    category: 'Music / Album',
+    description: 'Full production, mix, and master for a debut album — arranged, tracked, and finished under one roof.',
+    image: '/images/work-resonance.png',
+    tags: ['Music'],
+    href: 'https://digitalstudioz.com/work/resonance',
+    gallery: [
+      { src: '/images/work-resonance.png', alt: 'Music production console and vinyl record with cyan meters' },
+      { src: '/images/reel-mixing.png', alt: 'Mixing console with faders glowing cool cyan' },
     ],
   },
 ]

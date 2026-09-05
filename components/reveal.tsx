@@ -18,6 +18,10 @@ export function Reveal({
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    // Observe the parent, not the element itself: the clip-path wipe collapses
+    // the element's painted area to zero, which makes IntersectionObserver
+    // report a 0 ratio and never fire on the clipped node.
+    const target = el.parentElement ?? el
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -27,7 +31,7 @@ export function Reveal({
       },
       { rootMargin: '0px 0px -10% 0px', threshold: 0 },
     )
-    io.observe(el)
+    io.observe(target)
     return () => io.disconnect()
   }, [])
   return (
@@ -37,9 +41,10 @@ export function Reveal({
       style={{
         transitionDelay: `${delay}ms`,
         opacity: show ? 1 : 0,
-        transform: show ? 'translateY(0)' : 'translateY(0.9rem)',
+        clipPath: show ? 'inset(0 0 0 0)' : 'inset(100% 0 0 0)',
+        transform: show ? 'translateY(0)' : 'translateY(0.5rem)',
       }}
-      className={`transition-[opacity,transform] duration-500 ease-out ${className ?? ''}`}
+      className={`transition-[opacity,clip-path,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${className ?? ''}`}
     >
       {children}
     </Tag>

@@ -102,6 +102,13 @@ export function HeroSlider() {
           <div className="flex flex-col gap-1.5">
             <span className="text-accent">{heroSlides[active].kicker}</span>
             <span>{studio.location}</span>
+            <span className="mt-1 inline-flex items-center gap-2 text-band-foreground/85">
+              <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+              </span>
+              {studio.availability}
+            </span>
           </div>
           <div className="flex flex-col items-end gap-1.5 text-right">
             <span>{studio.tagline}</span>

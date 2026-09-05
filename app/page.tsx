@@ -7,6 +7,7 @@ import { ReelSection } from '@/components/reel-section'
 import { WorksSection } from '@/components/works-section'
 import { ProcessSection } from '@/components/process-section'
 import { ParallaxBand } from '@/components/parallax-band'
+import { TestimonialBand } from '@/components/testimonial-band'
 import { ServicesSection } from '@/components/services-section'
 import { NewsSection } from '@/components/news-section'
 import { ContactSection } from '@/components/contact-section'
@@ -36,7 +37,7 @@ export default function Home() {
           <ProcessSection />
           <ServicesSection />
           <NewsSection />
-          <ParallaxBand image="/images/hero-brand.png" quote={quotes[0].text} author={quotes[0].author} height="lg" />
+          <TestimonialBand image="/images/hero-brand.png" />
           <ContactSection />
           <ParallaxBand image="/images/hero-studio.png" />
         </main>

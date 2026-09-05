@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
-import { useLightbox, type LightboxSlide } from '@/components/lightbox'
+import { useLightbox, type LightboxItem } from '@/components/lightbox'
 import { disciplines } from '@/lib/site-data'
 
 export function ReelSection() {
@@ -22,7 +22,14 @@ export function ReelSection() {
   const startLeft = useRef(0)
   const barDragging = useRef(false)
 
-  const gallery: LightboxSlide[] = disciplines.map((item) => ({ src: item.image, alt: item.name, caption: item.name, meta: item.category }))
+  const gallery: LightboxItem[] = disciplines.map((item) => ({
+    title: item.name,
+    meta: item.category,
+    description: item.description,
+    href: item.href,
+    hrefLabel: 'Explore',
+    images: item.gallery ?? [{ src: item.image, alt: item.name }],
+  }))
 
   const measure = useCallback(() => {
     const el = trackRef.current
@@ -52,7 +59,9 @@ export function ReelSection() {
     el.scrollBy({ left: d * el.clientWidth * 0.8, behavior: 'smooth' })
   }
 
-  // Drag-to-scroll across the whole rail.
+  // Drag-to-scroll across the whole rail. Pointer capture is deferred until
+  // movement is detected — capturing on pointerdown would redirect the
+  // follow-up `click` to the track and stop tiles from opening the lightbox.
   const onPointerDown = (e: React.PointerEvent) => {
     const el = trackRef.current
     if (!el) return
@@ -60,14 +69,16 @@ export function ReelSection() {
     moved.current = false
     startX.current = e.clientX
     startLeft.current = el.scrollLeft
-    el.setPointerCapture(e.pointerId)
   }
   const onPointerMove = (e: React.PointerEvent) => {
     const el = trackRef.current
     if (!el || !dragging.current) return
     const dx = e.clientX - startX.current
-    if (Math.abs(dx) > 5) moved.current = true
-    el.scrollLeft = startLeft.current - dx
+    if (!moved.current && Math.abs(dx) > 6) {
+      moved.current = true
+      el.setPointerCapture(e.pointerId)
+    }
+    if (moved.current) el.scrollLeft = startLeft.current - dx
   }
   const endDrag = (e: React.PointerEvent) => {
     const el = trackRef.current

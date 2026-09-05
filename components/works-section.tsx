@@ -4,12 +4,19 @@ import Image from 'next/image'
 import { Maximize2 } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
 import { Reveal } from '@/components/reveal'
-import { useLightbox, type LightboxSlide } from '@/components/lightbox'
+import { useLightbox, type LightboxItem } from '@/components/lightbox'
 import { works } from '@/lib/site-data'
 
 export function WorksSection() {
   const { open } = useLightbox()
-  const gallery: LightboxSlide[] = works.map((w) => ({ src: w.image, alt: w.name, caption: w.name, meta: `// ${w.id} / ${w.category}` }))
+  const gallery: LightboxItem[] = works.map((w) => ({
+    title: w.name,
+    meta: `// ${w.id} / ${w.category}`,
+    description: w.description,
+    href: w.href,
+    hrefLabel: 'View project',
+    images: w.gallery ?? [{ src: w.image, alt: w.name }],
+  }))
   return (
     <section id="works" className="scroll-mt-20 border-t border-border bg-background py-24 md:py-32">
       <div className="container-wide"><SectionHeading index="// 03" ghost="Works" title="Full Works" /></div>

@@ -1,4 +1,3 @@
-import { ArrowUp } from 'lucide-react'
 import { nav, studio } from '@/lib/site-data'
 
 export function SiteFooter() {
@@ -41,12 +40,8 @@ export function SiteFooter() {
 
       {/* Bottom bar */}
       <div className="border-t border-border">
-        <div className="container-wide flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
+        <div className="container-wide flex items-center justify-center py-6">
           <p className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground">© {year} {studio.name} — {studio.artist}</p>
-          <a href="#top" className="inline-flex items-center gap-2 border border-border px-4 py-2 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-            Back to top
-            <ArrowUp className="h-3.5 w-3.5" strokeWidth={1.5} />
-          </a>
         </div>
       </div>
     </footer>

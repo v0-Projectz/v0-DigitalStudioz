@@ -1,46 +1,64 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { SectionHeading } from '@/components/section-heading'
-import { Reveal } from '@/components/reveal'
 import { useLightbox, type LightboxSlide } from '@/components/lightbox'
 import { disciplines } from '@/lib/site-data'
 
-const PER_PAGE = 3
-function chunk<T>(items: T[], size: number): T[][] { const pages: T[][] = []; for (let i = 0; i < items.length; i += size) pages.push(items.slice(i, i + size)); return pages }
-
 export function ReelSection() {
   const { open } = useLightbox()
-  const [page, setPage] = useState(0)
-  const pages = chunk(disciplines, PER_PAGE)
-  const pageCount = pages.length
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState(0)
   const gallery: LightboxSlide[] = disciplines.map((item) => ({ src: item.image, alt: item.name, caption: item.name, meta: item.category }))
-  const go = (next: number) => setPage((next + pageCount) % pageCount)
+
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el) return
+    const onScroll = () => {
+      const max = el.scrollWidth - el.clientWidth
+      setProgress(max > 0 ? el.scrollLeft / max : 0)
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <section id="reel" className="scroll-mt-20 bg-background py-24 md:py-32">
-      <div className="container-wide">
-        <SectionHeading index="// 02" ghost="Featured" title="Work" subtitle="Studio / Portfolio" />
-        <Reveal>
-          <div className="relative overflow-hidden">
-            <div className="flex transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]" style={{ transform: `translateX(-${page * 100}%)` }}>
-              {pages.map((group, pageIndex) => (
-                <div key={pageIndex} className="grid w-full shrink-0 gap-6 md:grid-cols-3">
-                  {group.map((item, i) => { const globalIndex = pageIndex * PER_PAGE + i; return (
-                    <figure key={item.name} className="flex flex-col">
-                      <button type="button" onClick={() => open(gallery, globalIndex)} aria-label={`Open ${item.name} in lightbox`} className="group relative block aspect-[1/1] w-full overflow-hidden bg-band">
-                        <Image src={item.image || '/placeholder.svg'} alt={item.name} fill className="transform-gpu object-cover grayscale transition duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0" sizes="(min-width: 768px) 33vw, 100vw" />
-                        <div className="absolute inset-0 bg-scrim/20 transition-colors duration-500 group-hover:bg-scrim/40" />
-                      </button>
-                      <figcaption className="pt-5 text-left"><span className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground transition-colors group-hover:text-accent">{item.category}</span><p className="mt-1 text-sm font-light uppercase tracking-[0.2em] text-foreground">{item.name}</p></figcaption>
-                    </figure>) })}
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-        {pageCount > 1 && (<div className="mt-12 flex items-center justify-center gap-6"><button type="button" onClick={() => go(page - 1)} aria-label="Previous work" className="grid h-9 w-9 place-items-center border border-border text-muted-foreground transition-colors hover:border-accent hover:text-accent"><ChevronLeft className="h-4 w-4" /></button><div className="flex items-center gap-3" role="tablist" aria-label="Work pages">{pages.map((_, i) => (<button key={i} type="button" role="tab" aria-selected={page === i} aria-label={`Go to work page ${i + 1}`} onClick={() => setPage(i)} className={`h-[2px] transition-all duration-300 ${page === i ? 'w-10 bg-accent' : 'w-6 bg-border hover:bg-muted-foreground'}`} />))}</div><button type="button" onClick={() => go(page + 1)} aria-label="Next work" className="grid h-9 w-9 place-items-center border border-border text-muted-foreground transition-colors hover:border-accent hover:text-accent"><ChevronRight className="h-4 w-4" /></button></div>)}
+    <section id="reel" className="scroll-mt-20 border-t border-border bg-background py-24 md:py-32">
+      <div className="container-wide"><SectionHeading index="// 02" ghost="Featured" title="Work" subtitle="Studio / Portfolio" /></div>
+      <div
+        ref={trackRef}
+        className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-4 md:gap-6 md:px-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {disciplines.map((item, i) => {
+          const feature = i % 3 === 0
+          return (
+            <figure key={item.name} className={`flex shrink-0 snap-start flex-col ${feature ? 'w-[85vw] md:w-[44rem]' : 'w-[72vw] md:w-[23rem]'}`}>
+              <button
+                type="button"
+                onClick={() => open(gallery, i)}
+                aria-label={`Open ${item.name} in lightbox`}
+                className={`group relative block w-full overflow-hidden bg-band ${feature ? 'aspect-[16/10]' : 'aspect-[3/4]'}`}
+              >
+                <Image src={item.image || '/placeholder.svg'} alt={item.name} fill className="transform-gpu object-cover grayscale transition duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0" sizes="(min-width: 768px) 44rem, 85vw" />
+                <div className="absolute inset-0 bg-scrim/25 transition-colors duration-500 group-hover:bg-scrim/40" />
+                <span className="absolute left-4 top-4 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-band-foreground/80">{`0${i + 1}`}</span>
+              </button>
+              <figcaption className="flex items-baseline justify-between gap-4 border-t border-border pt-4">
+                <p className="text-lg font-bold uppercase tracking-tight text-foreground md:text-xl">{item.name}</p>
+                <span className="shrink-0 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground">{item.category}</span>
+              </figcaption>
+            </figure>
+          )
+        })}
+        <div className="shrink-0 pl-1 pr-2" aria-hidden="true" />
+      </div>
+      <div className="container-wide mt-8">
+        <div className="relative h-px w-full bg-border">
+          <div className="absolute left-0 top-0 h-px bg-accent transition-[width] duration-150 ease-out" style={{ width: `${Math.max(6, progress * 100)}%` }} />
+        </div>
+        <p className="mt-3 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground">Scroll &rarr; to browse</p>
       </div>
     </section>
   )

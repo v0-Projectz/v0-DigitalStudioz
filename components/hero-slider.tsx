@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight, Minus, Plus, Settings2, X } from 'lucide-react'
+import { Minus, Plus, Settings2, X } from 'lucide-react'
 import { heroSlides, studio } from '@/lib/site-data'
 
 type Transition = 'fade' | 'slide' | 'dip'
@@ -15,6 +15,7 @@ const PRESETS: { label: string; seconds: number }[] = [ { label: 'Slow', seconds
 
 export function HeroSlider() {
   const count = heroSlides.length
+  const year = new Date().getFullYear()
   const [active, setActive] = useState(0)
   const [prev, setPrev] = useState<number | null>(null)
   const [dir, setDir] = useState(1)
@@ -84,31 +85,63 @@ export function HeroSlider() {
   }
 
   return (
-    <section id="top" className="relative h-[100svh] min-h-[560px] w-full overflow-hidden bg-scrim">
+    <section id="top" className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-scrim">
       {heroSlides.map((slide, i) => (
         <div key={slide.subtitle} className="absolute inset-0" style={outerStyle(i)} aria-hidden={i !== active}>
           <div className="relative h-full w-full will-change-transform" style={innerStyle(i)}>
             <Image src={slide.image || '/placeholder.svg'} alt={slide.alt} fill priority={i === 0} className="object-cover" sizes="100vw" />
           </div>
-          <div className="absolute inset-0 bg-scrim/55" />
+          <div className="absolute inset-0 bg-gradient-to-t from-scrim/85 via-scrim/40 to-scrim/60" />
         </div>
       ))}
-      <div className="pointer-events-none relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-band-foreground">
-        <span className="font-mono text-[0.65rem] tracking-[0.35em] text-band-foreground/70 sm:text-xs sm:tracking-[0.4em]">{heroSlides[active].subtitle}</span>
-        <h1 className="mt-5 max-w-full text-balance text-3xl font-light uppercase tracking-[0.12em] sm:mt-6 sm:text-5xl sm:tracking-[0.2em] md:text-7xl md:tracking-[0.25em]">{studio.name}</h1>
-        <div className="mt-5 flex flex-col items-center gap-2 sm:mt-6">
-          <span className="h-px w-10 bg-accent/70" />
-          <span className="text-[0.6rem] uppercase tracking-[0.25em] text-band-foreground/80 sm:text-[0.7rem] sm:tracking-[0.35em]">{studio.tagline}</span>
+
+      {/* Editorial poster overlay */}
+      <div className="pointer-events-none relative z-10 flex h-full flex-col justify-between px-6 py-20 text-band-foreground md:px-10 md:py-24 lg:px-16">
+        {/* Corner metadata */}
+        <div className="flex items-start justify-between font-mono text-[0.6rem] uppercase tracking-[0.3em] text-band-foreground/70">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-accent">{heroSlides[active].kicker}</span>
+            <span>{studio.location}</span>
+          </div>
+          <div className="flex flex-col items-end gap-1.5 text-right">
+            <span>{studio.tagline}</span>
+            <span>&copy; {year}</span>
+          </div>
+        </div>
+
+        {/* Bottom-anchored wordmark + filmstrip */}
+        <div>
+          <span className="block font-mono text-[0.65rem] uppercase tracking-[0.4em] text-band-foreground/80 sm:text-xs">{heroSlides[active].subtitle}</span>
+          <h1 className="mt-3 text-balance text-[3.25rem] font-bold uppercase leading-[0.82] tracking-tighter sm:text-7xl md:text-8xl lg:text-[9.5rem]">{studio.name}</h1>
+          <div className="mt-8 flex items-stretch gap-2 pointer-events-auto sm:gap-3">
+            {heroSlides.map((slide, i) => {
+              const isActive = i === active
+              return (
+                <button
+                  key={slide.subtitle}
+                  type="button"
+                  onClick={() => change(i >= active ? 1 : -1, i)}
+                  aria-label={`Show slide ${i + 1}`}
+                  aria-current={isActive}
+                  className={`group relative h-11 flex-1 border transition-colors ${isActive ? 'border-band-foreground/50' : 'border-band-foreground/20 hover:border-band-foreground/40'}`}
+                >
+                  <span className={`absolute left-2 top-1.5 font-mono text-[0.55rem] uppercase tracking-[0.2em] transition-colors ${isActive ? 'text-band-foreground' : 'text-band-foreground/50 group-hover:text-band-foreground/80'}`}>{slide.kicker.replace('// ', '')}</span>
+                  <span className="absolute bottom-0 left-0 h-[3px] w-full bg-band-foreground/15">
+                    <span
+                      key={isActive ? `fill-${active}-${seconds}-${autoplay}` : `idle-${i}`}
+                      className="block h-full bg-accent"
+                      style={{ width: isActive ? '100%' : '0%', transition: isActive && autoplay ? `width ${speedMs}ms linear` : 'width 350ms ease' }}
+                    />
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
-      <button type="button" onClick={() => change(-1)} aria-label="Previous slide" className="absolute left-4 top-1/2 z-20 -translate-y-1/2 p-3 text-band-foreground/60 transition-colors hover:text-band-foreground md:left-8"><ChevronLeft className="h-7 w-7" strokeWidth={1} /></button>
-      <button type="button" onClick={() => change(1)} aria-label="Next slide" className="absolute right-4 top-1/2 z-20 -translate-y-1/2 p-3 text-band-foreground/60 transition-colors hover:text-band-foreground md:right-8"><ChevronRight className="h-7 w-7" strokeWidth={1} /></button>
-      <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3">
-        {heroSlides.map((slide, i) => (
-          <button key={slide.subtitle} type="button" onClick={() => change(i >= active ? 1 : -1, i)} aria-label={`Show slide ${i + 1}`} aria-current={i === active} className={`h-2 w-2 rounded-full border border-band-foreground/70 transition-all ${i === active ? 'bg-band-foreground' : 'bg-transparent hover:bg-band-foreground/50'}`} />
-        ))}
-      </div>
-      <div className="absolute bottom-8 right-6 z-30 md:bottom-10 md:right-8">
+
+      {/* Settings picker */}
+      <div className="absolute bottom-6 right-6 z-30 md:bottom-8 md:right-8">
         {menuOpen && (
           <>
             <button type="button" aria-label="Close slider settings" className="fixed inset-0 z-0 cursor-default" onClick={() => setMenuOpen(false)} />

@@ -76,10 +76,22 @@ export const quotes = [
   { text: 'The best effect is a good idea.', author: 'Studio Rule 07' },
 ]
 
+export const process = [
+  { step: '01', title: 'Discover', body: 'We open with the idea and the outcome — a short, sharp brief that aligns sound, picture, and brand before a single frame is made.' },
+  { step: '02', title: 'Direct', body: 'Concept, references, and a creative direction that ties every discipline to one signal, so the work reads as intentional end to end.' },
+  { step: '03', title: 'Produce', body: 'We build it — tracking, shooting, editing, animating, and coding in-house, iterating fast against the direction.' },
+  { step: '04', title: 'Deliver', body: 'Final masters, exports, and launch-ready systems, packaged and documented so the work ships clean across every platform.' },
+]
+
+export const marqueeWords = [
+  'Sound & Music', 'Video & Film', 'Motion & 3D', 'Brand & Identity', 'Web & Product', 'Mix & Master', 'Art Direction', 'Creative Code',
+]
+
 export const nav = [
   { label: 'About', href: '#about' },
   { label: 'Reel', href: '#reel' },
   { label: 'Works', href: '#works' },
+  { label: 'Process', href: '#process' },
   { label: 'Services', href: '#services' },
   { label: 'News', href: '#news' },
   { label: 'Contact', href: '#contact' },
